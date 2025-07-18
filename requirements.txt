@@ -1,4 +1,1 @@
-streamlit
-pandas
-openpyxl
-xlsxwriter
+pip install gspread oauth2client
