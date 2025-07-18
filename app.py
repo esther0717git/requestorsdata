@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import date
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Access Request Viewer", layout="wide")
@@ -13,13 +14,13 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service
 client = gspread.authorize(creds)
 
 # --- LOAD DATA ---
-sheet = client.open("SG / US Access (Tickets)").sheet1
+sheet = client.open("SG / US Access (Tickets)").worksheet("SG US Access")
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
 
 # --- RENAME COLUMNS FOR CLARITY ---
 df.rename(columns={
-    "\u7533\u8bf7\u4eba": "Requester",
+    "申请人": "Requester",
     "Ticket Number": "Ticket Number",
     "Access First Date": "Access Start",
     "Access Last Date": "Access End",
@@ -43,8 +44,8 @@ if selected_company != "All":
     filtered_df = filtered_df[filtered_df["Company"] == selected_company]
 
 # Optional: Filter by Date Range
-start_date = st.sidebar.date_input("Access Start Date From", value=None)
-end_date = st.sidebar.date_input("Access End Date To", value=None)
+start_date = st.sidebar.date_input("Access Start Date From", value=date(2025, 1, 1))
+end_date = st.sidebar.date_input("Access End Date To", value=date.today())
 
 if start_date:
     filtered_df = filtered_df[pd.to_datetime(filtered_df["Access Start"], errors='coerce') >= pd.to_datetime(start_date)]
