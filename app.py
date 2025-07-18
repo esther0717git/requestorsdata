@@ -14,7 +14,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service
 client = gspread.authorize(creds)
 
 # --- LOAD DATA ---
-sheet = client.open("SG / US Access (Tickets)").worksheet("SG US Access")
+sheet = client.open_by_key("1okKLMPBIuQNzEvWeWLodB5KR1Z_cevvNbTUKjh-_xBc").worksheet("SG US Access")
 data = sheet.get_all_records()
 df = pd.DataFrame(data)
 
